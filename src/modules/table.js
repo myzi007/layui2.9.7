@@ -305,7 +305,7 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
     // ====== 这里载入时自动隐藏不显示的行,从存入的缓存取数据
     let uPage = options.pageid
     let uData = layui.data('uCol')[uPage] || []
-    if(uData.length > 0){
+    if(uPage && uData.length > 0){
       let uCols = options.cols[0]
       for(let i = 0;i < uCols.length;i++){
         let uField = uCols[i].field
@@ -2046,20 +2046,22 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
                 let uField = col.field
                 if(uField){
                   let uPage = that.config.pageid
-                  let uData = layui.data('uCol')[uPage] || []
-                  if(col.hide){
-                    uData.push(uField)
-                    uData = Array.from(new Set(uData))
-                    layui.data('uCol', {
-                      key: uPage,
-                      value: uData
-                    });
-                  }else{
-                    uData = uData.filter(item => item !== uField)
-                    layui.data('uCol', {
-                      key: uPage,
-                      value: uData
-                    });
+                  if(uPage){
+                    let uData = layui.data('uCol')[uPage] || []
+                    if(col.hide){
+                      uData.push(uField)
+                      uData = Array.from(new Set(uData))
+                      layui.data('uCol', {
+                        key: uPage,
+                        value: uData
+                      });
+                    }else{
+                      uData = uData.filter(item => item !== uField)
+                      layui.data('uCol', {
+                        key: uPage,
+                        value: uData
+                      });
+                    }
                   }
                 }
                 
