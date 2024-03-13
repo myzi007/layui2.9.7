@@ -303,11 +303,15 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
     var that = this;
     var options = that.config;
     // ====== 这里载入时自动隐藏不显示的行,从存入的缓存取数据
-    let uCols = options.cols[0]
-    for(let i = 0;i < uCols.length;i++){
-      let uField = uCols[i].field
-      if(uField&&uField == 'id'){
-        uCols[i].hide = true
+    let uPage = options.pageid
+    let uData = layui.data('uCol')[uPage] || []
+    if(uData.length > 0){
+      let uCols = options.cols[0]
+      for(let i = 0;i < uCols.length;i++){
+        let uField = uCols[i].field
+        if(uField && uData.includes(uField)){
+          uCols[i].hide = true
+        }
       }
     }
 
@@ -2035,15 +2039,30 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
 
                 if(!col.key) return;
 
-                
-                // ====== 这里载入时自动隐藏不显示的行,在这里将数据存入缓存
-                let field = col.field
-                if(field){
-                  console.log(field)
-                }
-
                 // 同步勾选列的 hide 值和隐藏样式
                 col.hide = !checked;
+                
+                // ====== 这里载入时自动隐藏不显示的行,在这里将数据存入缓存
+                let uField = col.field
+                if(uField){
+                  let uPage = that.config.pageid
+                  let uData = layui.data('uCol')[uPage] || []
+                  if(col.hide){
+                    uData.push(uField)
+                    uData = Array.from(new Set(uData))
+                    layui.data('uCol', {
+                      key: uPage,
+                      value: uData
+                    });
+                  }else{
+                    uData = uData.filter(item => item !== uField)
+                    layui.data('uCol', {
+                      key: uPage,
+                      value: uData
+                    });
+                  }
+                }
+                
                 that.elem.find('*[data-key="'+ key +'"]')[
                   checked ? 'removeClass' : 'addClass'
                 ](HIDE);
