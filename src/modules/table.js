@@ -2044,24 +2044,22 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
                 
                 // ====== 这里载入时自动隐藏不显示的行,在这里将数据存入缓存
                 let uField = col.field
-                if(uField){
-                  let uPage = that.config.pageid
-                  if(uPage){
-                    let uData = layui.data('uCol')[uPage] || []
-                    if(col.hide){
-                      uData.push(uField)
-                      uData = Array.from(new Set(uData))
-                      layui.data('uCol', {
-                        key: uPage,
-                        value: uData
-                      });
-                    }else{
-                      uData = uData.filter(item => item !== uField)
-                      layui.data('uCol', {
-                        key: uPage,
-                        value: uData
-                      });
-                    }
+                let uPage = that.config.pageid
+                if(uField && uPage){
+                  let uData = layui.data('uCol')[uPage] || []
+                  if(col.hide){
+                    uData.push(uField)
+                    uData = Array.from(new Set(uData))
+                    layui.data('uCol', {
+                      key: uPage,
+                      value: uData
+                    });
+                  }else{
+                    uData = uData.filter(item => item !== uField)
+                    layui.data('uCol', {
+                      key: uPage,
+                      value: uData
+                    });
                   }
                 }
                 
