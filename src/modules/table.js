@@ -302,6 +302,14 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
   Class.prototype.render = function(type){
     var that = this;
     var options = that.config;
+    // ====== 这里载入时自动隐藏不显示的行,从存入的缓存取数据
+    let uCols = options.cols[0]
+    for(let i = 0;i < uCols.length;i++){
+      let uField = uCols[i].field
+      if(uField&&uField == 'id'){
+        uCols[i].hide = true
+      }
+    }
 
     options.elem = $(options.elem);
     options.where = options.where || {};
@@ -2026,6 +2034,13 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
                 var parentKey = othis.data('parentkey');
 
                 if(!col.key) return;
+
+                
+                // ====== 这里载入时自动隐藏不显示的行,在这里将数据存入缓存
+                let field = col.field
+                if(field){
+                  console.log(field)
+                }
 
                 // 同步勾选列的 hide 值和隐藏样式
                 col.hide = !checked;
